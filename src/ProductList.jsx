@@ -1,68 +1,52 @@
 import React, { useState } from "react";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { addItem } from "../redux/CartSlice";
 
 const ProductList = () => {
   const dispatch = useDispatch();
+  const cartItems = useSelector((state) => state.cart.items);
 
-  // State to track added products
   const [addedToCart, setAddedToCart] = useState({});
 
-  // Plants Array
   const plantsArray = [
     {
       id: 1,
       name: "Aloe Vera",
-      category: "Medicinal",
       image: "https://via.placeholder.com/150",
-      description: "Good for skin and health",
-      cost: 100,
+      description: "Good for skin",
+      cost: 100
     },
     {
       id: 2,
-      name: "Tulsi",
-      category: "Medicinal",
-      image: "https://via.placeholder.com/150",
-      description: "Holy plant with healing properties",
-      cost: 80,
-    },
-    {
-      id: 3,
       name: "Mint",
-      category: "Aromatic",
       image: "https://via.placeholder.com/150",
-      description: "Fresh and fragrant herb",
-      cost: 50,
-    },
-    {
-      id: 4,
-      name: "Lavender",
-      category: "Aromatic",
-      image: "https://via.placeholder.com/150",
-      description: "Relaxing fragrance plant",
-      cost: 120,
-    },
+      description: "Fresh herb",
+      cost: 50
+    }
   ];
 
-  // Add to Cart Function
   const handleAddToCart = (plant) => {
     dispatch(addItem(plant));
 
     setAddedToCart((prev) => ({
       ...prev,
-      [plant.name]: true,
+      [plant.name]: true
     }));
+  };
+
+  const calculateTotalQuantity = () => {
+    return cartItems.reduce((total, item) => total + item.quantity, 0);
   };
 
   return (
     <div>
-      <h2>Our Plants 🌿</h2>
+      <h2>🌿 Products</h2>
+      <h3>🛒 Cart Items: {calculateTotalQuantity()}</h3>
 
       <div className="product-grid">
         {plantsArray.map((plant) => (
-          <div className="plant-card" key={plant.id}>
+          <div key={plant.id} className="plant-card">
             <img src={plant.image} alt={plant.name} />
-
             <h3>{plant.name}</h3>
             <p>{plant.description}</p>
             <p>₹{plant.cost}</p>
